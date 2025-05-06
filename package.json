@@ -1,23 +1,73 @@
 {
   "name": "yed-extension",
-  "displayName": "yed-extension",
-  "description": "",
+  "displayName": "YAML Encrypter Decrypter",
+  "description": "Encrypt and decrypt YAML snippets using .yed_config.yml and native binaries from yaml-encrypter-decrypter.",
   "version": "0.0.1",
+  "publisher": "nsvk13",
+  "license": "MIT",
   "engines": {
     "vscode": "^1.99.0"
   },
   "categories": [
-    "Other"
+    "Other",
+    "Security",
+    "Tools",
+    "DevOps"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onCommand:yaml-encrypter-decrypter.encrypt",
+    "onCommand:yaml-encrypter-decrypter.decrypt"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "yed-extension.helloWorld",
-        "title": "Hello World"
+        "command": "yaml-encrypter-decrypter.encrypt",
+        "title": "YED: Encrypt Selected Text"
+      },
+      {
+        "command": "yaml-encrypter-decrypter.decrypt",
+        "title": "YED: Decrypt Selected Text"
       }
-    ]
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "when": "editorHasSelection",
+          "command": "yaml-encrypter-decrypter.encrypt",
+          "group": "navigation"
+        },
+        {
+          "when": "editorHasSelection",
+          "command": "yaml-encrypter-decrypter.decrypt",
+          "group": "navigation"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "yaml-encrypter-decrypter.encrypt",
+        "key": "ctrl+alt+e",
+        "mac": "cmd+alt+e",
+        "when": "editorHasSelection"
+      },
+      {
+        "command": "yaml-encrypter-decrypter.decrypt",
+        "key": "ctrl+alt+d",
+        "mac": "cmd+alt+d",
+        "when": "editorHasSelection"
+      }
+    ],
+    "configuration": {
+      "title": "YAML Encrypter Decrypter",
+      "properties": {
+        "yamlEncrypterDecrypter.configPath": {
+          "type": "string",
+          "default": ".yed_config.yml",
+          "description": "Path to YED configuration file relative to workspace root."
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "bun run package",
@@ -27,21 +77,25 @@
     "compile-tests": "tsc -p . --outDir out",
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "bun run compile-tests && bun run compile && bun run lint",
-    "lint": "eslint src",
+    "lint": "eslint src --ext .ts",
     "test": "bun run vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.99.0",
+    "@types/js-yaml": "^4.0.9",
     "@types/mocha": "^10.0.10",
-    "@types/node": "20.x",
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.99.0",
     "@typescript-eslint/eslint-plugin": "^8.28.0",
     "@typescript-eslint/parser": "^8.28.0",
-    "eslint": "^9.23.0",
-    "typescript": "^5.8.2",
-    "ts-loader": "^9.5.2",
-    "webpack": "^5.98.0",
-    "webpack-cli": "^6.0.1",
     "@vscode/test-cli": "^0.0.10",
-    "@vscode/test-electron": "^2.4.1"
+    "@vscode/test-electron": "^2.4.1",
+    "eslint": "^9.0.0",
+    "ts-loader": "^9.5.2",
+    "typescript": "^5.4.3",
+    "webpack": "^5.98.0",
+    "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0"
   }
 }
