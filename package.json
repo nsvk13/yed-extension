@@ -21,52 +21,27 @@
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
-      {
-        "command": "yaml-encrypter-decrypter.encrypt",
-        "title": "YED: Encrypt Selected Text"
-      },
-      {
-        "command": "yaml-encrypter-decrypter.decrypt",
-        "title": "YED: Decrypt Selected Text"
+      { "command": "yed.encryptSelection", "title": "YED: Encrypt Selection" },
+      { "command": "yed.decryptSelection", "title": "YED: Decrypt Selection" }
+    ],
+    "configuration": {
+      "title": "YED",
+      "properties": {
+        "yed.version":       { "type": "string", "default": "v0.3.6", "description": "CLI release tag" },
+        "yed.cliPath":       { "type": "string", "description": "Override path to yed binary" },
+        "yed.validateRules": { "type": "boolean", "default": true, "description": "Pass --validate-rules" },
+        "yed.cliCacheDir":   { "type": "string", "description": "Custom cache dir for binaries" }
       }
+    },
+    "keybindings": [
+      { "command": "yed.encryptSelection", "key": "ctrl+alt+e", "when": "editorTextFocus && !editorReadonly" },
+      { "command": "yed.decryptSelection", "key": "ctrl+alt+d", "when": "editorTextFocus && !editorReadonly" }
     ],
     "menus": {
       "editor/context": [
-        {
-          "when": "editorHasSelection",
-          "command": "yaml-encrypter-decrypter.encrypt",
-          "group": "navigation"
-        },
-        {
-          "when": "editorHasSelection",
-          "command": "yaml-encrypter-decrypter.decrypt",
-          "group": "navigation"
-        }
+        { "command": "yed.encryptSelection", "group": "yed" },
+        { "command": "yed.decryptSelection", "group": "yed" }
       ]
-    },
-    "keybindings": [
-      {
-        "command": "yaml-encrypter-decrypter.encrypt",
-        "key": "ctrl+alt+e",
-        "mac": "cmd+alt+e",
-        "when": "editorHasSelection"
-      },
-      {
-        "command": "yaml-encrypter-decrypter.decrypt",
-        "key": "ctrl+alt+d",
-        "mac": "cmd+alt+d",
-        "when": "editorHasSelection"
-      }
-    ],
-    "configuration": {
-      "title": "YAML Encrypter Decrypter",
-      "properties": {
-        "yamlEncrypterDecrypter.configPath": {
-          "type": "string",
-          "default": ".yed_config.yml",
-          "description": "Path to YED configuration file relative to workspace root."
-        }
-      }
     }
   },
   "scripts": {
@@ -83,7 +58,7 @@
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^20.0.0",
+    "@types/node": "^22.15.18",
     "@types/vscode": "^1.99.0",
     "@typescript-eslint/eslint-plugin": "^8.28.0",
     "@typescript-eslint/parser": "^8.28.0",
@@ -96,6 +71,8 @@
     "webpack-cli": "^6.0.1"
   },
   "dependencies": {
-    "js-yaml": "^4.1.0"
+    "@types/node-fetch": "^2.6.12",
+    "node-fetch": "^3.3.2",
+    "yaml": "^2.8.0"
   }
 }
