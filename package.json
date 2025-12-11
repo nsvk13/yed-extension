@@ -1,25 +1,48 @@
 {
   "name": "yed-extension",
-  "displayName": "yed-extension",
-  "description": "",
+  "displayName": "YAML Encrypter Decrypter",
+  "description": "Encrypt and decrypt YAML snippets using .yed_config.yml and native binaries from yaml-encrypter-decrypter.",
   "version": "0.0.1",
+  "publisher": "nsvk13",
+  "license": "MIT",
   "engines": {
     "vscode": "^1.99.0"
   },
   "categories": [
-    "Other"
+    "Other",
+    "Security",
+    "Tools",
+    "DevOps"
   ],
   "activationEvents": [
-    "onCommand:yed-extension.helloWorld"
+    "onCommand:yaml-encrypter-decrypter.encrypt",
+    "onCommand:yaml-encrypter-decrypter.decrypt"
   ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
-      {
-        "command": "yed-extension.helloWorld",
-        "title": "Hello World"
+      { "command": "yed.encryptSelection", "title": "YED: Encrypt Selection" },
+      { "command": "yed.decryptSelection", "title": "YED: Decrypt Selection" }
+    ],
+    "configuration": {
+      "title": "YED",
+      "properties": {
+        "yed.version":       { "type": "string", "default": "v0.3.6", "description": "CLI release tag" },
+        "yed.cliPath":       { "type": "string", "description": "Override path to yed binary" },
+        "yed.validateRules": { "type": "boolean", "default": true, "description": "Pass --validate-rules" },
+        "yed.cliCacheDir":   { "type": "string", "description": "Custom cache dir for binaries" }
       }
-    ]
+    },
+    "keybindings": [
+      { "command": "yed.encryptSelection", "key": "ctrl+alt+e", "when": "editorTextFocus && !editorReadonly" },
+      { "command": "yed.decryptSelection", "key": "ctrl+alt+d", "when": "editorTextFocus && !editorReadonly" }
+    ],
+    "menus": {
+      "editor/context": [
+        { "command": "yed.encryptSelection", "group": "yed" },
+        { "command": "yed.decryptSelection", "group": "yed" }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "bun run package",
@@ -29,21 +52,27 @@
     "compile-tests": "tsc -p . --outDir out",
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "bun run compile-tests && bun run compile && bun run lint",
-    "lint": "eslint src",
+    "lint": "eslint src --ext .ts",
     "test": "bun run vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.99.0",
+    "@types/js-yaml": "^4.0.9",
     "@types/mocha": "^10.0.10",
-    "@types/node": "20.x",
+    "@types/node": "^22.15.18",
+    "@types/vscode": "^1.99.0",
     "@typescript-eslint/eslint-plugin": "^8.28.0",
     "@typescript-eslint/parser": "^8.28.0",
-    "eslint": "^9.23.0",
-    "typescript": "^5.8.2",
-    "ts-loader": "^9.5.2",
-    "webpack": "^5.98.0",
-    "webpack-cli": "^6.0.1",
     "@vscode/test-cli": "^0.0.10",
-    "@vscode/test-electron": "^2.4.1"
+    "@vscode/test-electron": "^2.4.1",
+    "eslint": "^9.0.0",
+    "ts-loader": "^9.5.2",
+    "typescript": "^5.4.3",
+    "webpack": "^5.98.0",
+    "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "@types/node-fetch": "^2.6.12",
+    "node-fetch": "^3.3.2",
+    "yaml": "^2.8.0"
   }
 }
